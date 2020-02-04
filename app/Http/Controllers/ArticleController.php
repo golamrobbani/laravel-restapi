@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Helpers\APIHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Helpers\APIHelpers;
-use DB;
 
 class ArticleController extends Controller
 {
@@ -15,10 +14,13 @@ class ArticleController extends Controller
      * Create a new controller instance.
      * @return void
      */
-    /* public function __construct()
+    public function __construct()
     {
-        $this->middleware('auth');
-    } */
+        if (!Str::startsWith(request()->path(), 'api')) {
+            $this->middleware('auth');
+        }
+        //$this->middleware('auth');
+    }
 
     /**
      * Display a listing of the resource.
@@ -139,7 +141,7 @@ class ArticleController extends Controller
     public function destroy($id)
     {
 
-        $article_delete =  Article::find($id) ? Article::find($id)->delete() : '';
+        $article_delete = Article::find($id) ? Article::find($id)->delete() : '';
 
         if (Str::startsWith(request()->path(), 'api')) {
             if ($article_delete) {
@@ -155,16 +157,13 @@ class ArticleController extends Controller
         }
     }
 
-
     public function search(Request $request)
     {
         $request_data = $request->all();
 
-        var_dump('parameter',$request_data);
+        var_dump('parameter', $request_data);
 
         //var_dump('argument',$sdata);
-
-
 
         // $drivers = Article::where('name', 'like', "%{$data}%"))
         //                  ->orWhere('detail', 'like', "%{$data}%"))

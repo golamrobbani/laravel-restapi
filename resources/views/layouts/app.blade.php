@@ -26,11 +26,14 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
 
+                @auth
+                <a class="navbar-brand" href="{{ url('/articles') }}">
+                    {{ config('app.name', 'Laravel Rest API') }}
+                </a>
+                @else
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel Rest API') }}
                 </a>
-                @auth
-                Hello, logged in user!
                 @endauth
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
