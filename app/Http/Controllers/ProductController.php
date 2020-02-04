@@ -64,6 +64,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::find($id);
+        
         $response = APIHelpers::createAPIResponse(false, 200, '', $product);
         return response()->json($response, 200);
     }

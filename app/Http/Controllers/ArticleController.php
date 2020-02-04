@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Helpers\APIHelpers;
 
 class ArticleController extends Controller
 {
@@ -12,10 +14,10 @@ class ArticleController extends Controller
      * Create a new controller instance.
      * @return void
      */
-    public function __construct()
+    /* public function __construct()
     {
         $this->middleware('auth');
-    }
+    } */
 
     /**
      * Display a listing of the resource.
@@ -25,8 +27,13 @@ class ArticleController extends Controller
     {
         $articles = Article::latest()->paginate(5);
 
-        return view('articles.index', compact('articles'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        if (Str::startsWith(request()->path(), 'api')) {
+            $response = APIHelpers::createAPIResponse(false, 200, '', $articles);
+            return response()->json($response, 200);
+        } else {
+            return view('articles.index', compact('articles'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
     }
 
     /**
@@ -45,15 +52,25 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required',
             'detail' => 'required',
         ]);
+        $article_save = Article::create($request->all());
 
-        Article::create($request->all());
-
-        return redirect()->route('articles.index')
-            ->with('success', 'article created successfully.');
+        if (Str::startsWith(request()->path(), 'api')) {
+            if ($article_save) {
+                $response = APIHelpers::createAPIResponse(false, 201, 'Article added successfully', null);
+                return response()->json($response, 201);
+            } else {
+                $response = APIHelpers::createAPIResponse(true, 400, 'Article creation failed', null);
+                return response()->json($response, 400);
+            }
+        } else {
+            return redirect()->route('articles.index')
+                ->with('success', 'article created successfully.');
+        }
     }
 
     /**
@@ -61,9 +78,15 @@ class ArticleController extends Controller
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show($id)
     {
-        return view('articles.show', compact('article'));
+        $article = Article::find($id);
+        if (Str::startsWith(request()->path(), 'api')) {
+            $response = APIHelpers::createAPIResponse(false, 200, '', $article);
+            return response()->json($response, 200);
+        } else {
+            return view('articles.show', compact('article'));
+        }
     }
 
     /**
@@ -89,10 +112,22 @@ class ArticleController extends Controller
             'detail' => 'required',
         ]);
 
-        $article->update($request->all());
+        //$product = Product::find($id);
 
-        return redirect()->route('articles.index')
-            ->with('success', 'article updated successfully');
+        $article_update = $article->update($request->all());
+
+        if (Str::startsWith(request()->path(), 'api')) {
+            if ($article_update) {
+                $response = APIHelpers::createAPIResponse(false, 200, 'Article updated successfully', null);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createAPIResponse(true, 400, 'Article update failed', null);
+                return response()->json($response, 400);
+            }
+        } else {
+            return redirect()->route('articles.index')
+                ->with('success', 'article updated successfully');
+        }
     }
 
     /**
@@ -100,12 +135,22 @@ class ArticleController extends Controller
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy($id)
     {
-        $article->delete();
 
-        return redirect()->route('articles.index')
-            ->with('success', 'article deleted successfully');
-
+       $article_delete =  Article::find($id)?Article::find($id)->delete():'';
+        
+        if (Str::startsWith(request()->path(), 'api')) {
+            if ($article_delete) {
+                $response = APIHelpers::createAPIResponse(false, 200, 'Article deleted successfully', null);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createAPIResponse(true, 400, 'Article delete failed', null);
+                return response()->json($response, 400);
+            }
+        } else {
+            return redirect()->route('articles.index')
+                ->with('success', 'article deleted successfully');
+        }
     }
 }
