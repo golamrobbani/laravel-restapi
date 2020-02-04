@@ -6,6 +6,7 @@ use App\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helpers\APIHelpers;
+use DB;
 
 class ArticleController extends Controller
 {
@@ -138,8 +139,8 @@ class ArticleController extends Controller
     public function destroy($id)
     {
 
-       $article_delete =  Article::find($id)?Article::find($id)->delete():'';
-        
+        $article_delete =  Article::find($id) ? Article::find($id)->delete() : '';
+
         if (Str::startsWith(request()->path(), 'api')) {
             if ($article_delete) {
                 $response = APIHelpers::createAPIResponse(false, 200, 'Article deleted successfully', null);
@@ -152,5 +153,26 @@ class ArticleController extends Controller
             return redirect()->route('articles.index')
                 ->with('success', 'article deleted successfully');
         }
+    }
+
+
+    public function search(Request $request)
+    {
+        $request_data = $request->all();
+
+        var_dump('parameter',$request_data);
+
+        //var_dump('argument',$sdata);
+
+
+
+        // $drivers = Article::where('name', 'like', "%{$data}%"))
+        //                  ->orWhere('detail', 'like', "%{$data}%"))
+        //                  ->get();
+
+        // return Response::json([
+        //     'data' => $drivers
+        // ]);
+
     }
 }
