@@ -10,7 +10,6 @@ class ArticleController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct()
@@ -20,7 +19,6 @@ class ArticleController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -33,7 +31,6 @@ class ArticleController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function create()
@@ -43,7 +40,6 @@ class ArticleController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -62,7 +58,6 @@ class ArticleController extends Controller
 
     /**
      * Display the specified resource.
-     *
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
@@ -73,7 +68,6 @@ class ArticleController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
@@ -84,7 +78,6 @@ class ArticleController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
@@ -104,7 +97,6 @@ class ArticleController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
@@ -114,5 +106,6 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')
             ->with('success', 'article deleted successfully');
+
     }
 }

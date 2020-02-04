@@ -18,9 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-         $products = Product::all();
-         $response = APIHelpers::createAPIResponse(false, 200, '', $products);
-         return response()->json($response, 200);
+        $products = Product::all();
+        $response = APIHelpers::createAPIResponse(false, 200, '', $products);
+        return response()->json($response, 200);
     }
 
     /**
@@ -41,15 +41,15 @@ class ProductController extends Controller
      */
     public function store(SaveProductRequest $request)
     {
-       $product= new Product();
-       $product->name=$request->name;
-       $product->description=$request->description;
-       $product->price=$request->price;
-       $product_save = $product->save();
-        if($product_save){
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product_save = $product->save();
+        if ($product_save) {
             $response = APIHelpers::createAPIResponse(false, 201, 'Product added successfully', null);
             return response()->json($response, 201);
-        }else{
+        } else {
             $response = APIHelpers::createAPIResponse(true, 400, 'Product creation failed', null);
             return response()->json($response, 400);
         }
@@ -63,9 +63,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-       $product = Product::find($id);
-       $response = APIHelpers::createAPIResponse(false, 200, '', $product);
-       return response()->json($response, 200);
+        $product = Product::find($id);
+        $response = APIHelpers::createAPIResponse(false, 200, '', $product);
+        return response()->json($response, 200);
     }
 
     /**
@@ -93,10 +93,10 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->price = $request->price;
         $product_update = $product->save();
-        if($product_update){
+        if ($product_update) {
             $response = APIHelpers::createAPIResponse(false, 200, 'Product updated successfully', null);
             return response()->json($response, 200);
-        }else{
+        } else {
             $response = APIHelpers::createAPIResponse(true, 400, 'Product update failed', null);
             return response()->json($response, 400);
         }
@@ -113,10 +113,10 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product_delete = $product->delete();
 
-        if($product_delete){
+        if ($product_delete) {
             $response = APIHelpers::createAPIResponse(false, 200, 'Product deleted successfully', null);
             return response()->json($response, 200);
-        }else{
+        } else {
             $response = APIHelpers::createAPIResponse(true, 400, 'Product delete failed', null);
             return response()->json($response, 400);
         }
