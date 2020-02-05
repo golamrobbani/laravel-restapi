@@ -6,6 +6,7 @@ use App\Article;
 use App\Helpers\APIHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -159,19 +160,30 @@ class ArticleController extends Controller
 
     public function search(Request $request)
     {
-        $request_data = $request->all();
+        //$request_data = $request->all();
+        $name = $request->get('name');
+        //$detail=$request->get('detail');
 
-        var_dump('parameter', $request_data);
+        $filter_articles = DB::table('articles')
+            ->where('name', 'like', "%{$name}%")
+            //->orWhere('detail','like', "%{$detail}%")
+            ->get();
 
-        //var_dump('argument',$sdata);
+        //var_dump('parameter', $articles);
 
-        // $drivers = Article::where('name', 'like', "%{$data}%"))
-        //                  ->orWhere('detail', 'like', "%{$data}%"))
-        //                  ->get();
+        if (Str::startsWith(request()->path(), 'api')) {
+            if ($filter_articles) {
+                $response = APIHelpers::createAPIResponse(false, 200, '', $filter_articles);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createAPIResponse(true, 400, 'Article Not Found', null);
+                return response()->json($response, 400);
+            }
+        } else {
+            return redirect()->route('search.index')
+                ->with('success', 'article search successfully');
+        }
 
-        // return Response::json([
-        //     'data' => $drivers
-        // ]);
 
     }
 }

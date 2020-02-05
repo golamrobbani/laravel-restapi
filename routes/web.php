@@ -25,3 +25,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //for article
 Route::resource('articles', 'ArticleController');
+
+//Route::get('/search', 'ArticleController@search')->name('search');
